@@ -12,7 +12,7 @@ import { ToastContainer } from "react-toastify";
 vi.mock("@/store/books", async (importOriginal) => {
     const actual = await importOriginal();
     return {
-        ...actual,
+        ...(actual as object),
         addBookOptimistic: vi.fn().mockImplementation((book) => ({
             type: "books/addBookOptimistic",
             payload: book,

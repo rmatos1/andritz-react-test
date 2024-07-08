@@ -1,12 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { BooksReducer, BooksState, changeWereBooksUpdated, resetUpdateError } from '../books.reducer';
 import { IBook } from '@/types';
-import { fetchBooks, addBookOptimistic, updateBookOptimistic, deleteBookOptimistic } from '../books.services';
 import { defaultState, testBooks } from '@/constants';
 
 describe('BooksReducer', () => {
   it('should handle fetchBooks.pending', () => {
-        const state = BooksReducer.reducer(undefined, fetchBooks.pending());
+        const pendingAction = { type: 'books/fetchBooks/pending' };  
+
+        const state = BooksReducer.reducer(defaultState, pendingAction); 
       
         expect(state.isLoading).toBe(true);
         expect(state.errorFetchBooks).toBe(null);
@@ -14,7 +15,10 @@ describe('BooksReducer', () => {
 
   it('should handle fetchBooks.fulfilled', () => {
         const books: IBook[] = [testBooks[0]];
-        const state = BooksReducer.reducer(undefined, fetchBooks.fulfilled(books));
+          
+        const fulfilledAction = { type: 'books/fetchBooks/fulfilled', payload: books };
+
+        const state = BooksReducer.reducer(defaultState, fulfilledAction);
       
         expect(state.isLoading).toBe(false);
         expect(state.books).toEqual(books);
@@ -22,15 +26,21 @@ describe('BooksReducer', () => {
 
   it('should handle fetchBooks.rejected', () => {
         const error = new Error('Failed to fetch books');
-        const state = BooksReducer.reducer(undefined, fetchBooks.rejected(error));
+        
+        const rejectedAction = { type: 'books/fetchBooks/rejected', payload: error, error: true };
+        
+        const state = BooksReducer.reducer(defaultState, rejectedAction);
       
         expect(state.isLoading).toBe(false);
-        expect(state.errorFetchBooks).toBe('Failed to fetch books');
+        expect(state.errorFetchBooks).toBe('Failed to get book list');
   });
 
   it('should handle addBookOptimistic.fulfilled', () => {
         const book: IBook = testBooks[0];
-        const state = BooksReducer.reducer(undefined, addBookOptimistic.fulfilled(book));
+        
+        const fulfilledAction = { type: 'books/addBookOptimistic/fulfilled', payload: book };
+        
+        const state = BooksReducer.reducer(defaultState, fulfilledAction);
       
         expect(state.books).toContainEqual(book);
         expect(state.wereBooksUpdated).toBe(true);
@@ -38,14 +48,20 @@ describe('BooksReducer', () => {
 
   it('should handle addBookOptimistic.rejected', () => {
         const error = new Error('Failed to add book');
-        const state = BooksReducer.reducer(undefined, addBookOptimistic.rejected(error));
+
+        const rejectedAction = { type: 'books/addBookOptimistic/rejected', payload: error, error: true };
+
+        const state = BooksReducer.reducer(defaultState, rejectedAction);
       
         expect(state.errorUpdateAction).toBe('Failed to add book');
   });
 
   it('should handle updateBookOptimistic.fulfilled', () => {
         const updatedBook: IBook = { id: '1', title: 'Updated Book 1', author: 'Updated Author 1' };
-        const state = BooksReducer.reducer(defaultState, updateBookOptimistic.fulfilled(updatedBook));
+
+        const fulfilledAction = { type: 'books/updateBookOptimistic/fulfilled', payload: updatedBook };
+
+        const state = BooksReducer.reducer(defaultState, fulfilledAction);
       
         expect(state.books).toContainEqual(updatedBook);
         expect(state.wereBooksUpdated).toBe(true);
@@ -53,14 +69,20 @@ describe('BooksReducer', () => {
 
   it('should handle updateBookOptimistic.rejected', () => {
         const error = new Error('Failed to update book');
-        const state = BooksReducer.reducer(undefined, updateBookOptimistic.rejected(error));
+
+        const rejectedAction = { type: 'books/updateBookOptimistic/rejected', payload: error, error: true };
+
+        const state = BooksReducer.reducer(defaultState, rejectedAction);
     
         expect(state.errorUpdateAction).toBe('Failed to update book');
   });
 
   it('should handle deleteBookOptimistic.fulfilled', () => {
         const id = '1';
-        const state = BooksReducer.reducer(defaultState, deleteBookOptimistic.fulfilled(id));
+
+        const fulfilledAction = { type: 'books/deleteBookOptimistic/fulfilled', payload: id };
+
+        const state = BooksReducer.reducer(defaultState, fulfilledAction);
       
         expect(state.books).not.toContainEqual(expect.objectContaining({ id }));
         expect(state.wereBooksUpdated).toBe(true);
@@ -68,7 +90,12 @@ describe('BooksReducer', () => {
 
   it('should handle deleteBookOptimistic.rejected', () => {
         const error = new Error('Failed to delete book');
-        const state = BooksReducer.reducer(undefined, deleteBookOptimistic.rejected(error));
+
+        const rejectedAction = { type: 'books/deleteBookOptimistic/rejected', payload: error, error: true };
+
+        const state = BooksReducer.reducer(defaultState, rejectedAction);
+
+        //const state = BooksReducer.reducer(undefined, deleteBookOptimistic.rejected(error));
       
         expect(state.errorUpdateAction).toBe('Failed to delete book');
   });

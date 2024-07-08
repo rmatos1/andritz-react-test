@@ -11,13 +11,13 @@ import { defaultState, testBooks } from "@/constants";
 vi.mock("@/store/books", async (importOriginal) => {
     const actual = await importOriginal();
     return {
-        ...actual,
+        ...(actual as object),
         fetchBooks: vi.fn(() => ({
             type: 'books/fetchBooks',
             payload: testBooks,
         })),
     };
-});
+  });
 
 const setup = (customState?: Partial<BooksState>): JSX.Element => {
     const store: EnhancedStore<unknown, UnknownAction> = configureStore({

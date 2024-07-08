@@ -1,0 +1,42 @@
+.bookCard {
+    border-bottom: 1px solid #eee;
+    padding: 20px 0;
+}
+
+.bookTitle {
+    font-size: 1.25em;
+    color: #454545;
+}
+  
+.bookAuthor {
+    font-size: 1em;
+    line-height: 1;
+}
+
+.cardButton {
+    box-sizing: border-box;
+    padding: 10px 0;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    border-radius: 6px;
+    background-color: #fff;
+    width: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+
+    &:hover {
+        opacity: 0.8;
+    }
+
+    &.editButton {
+        color: #005c99;
+        border: 2px solid #005c99;
+    }
+
+    &.deleteButton {
+        color: #ff3333;
+        border: 2px solid #ff3333;
+    }
+}

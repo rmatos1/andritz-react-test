@@ -1,0 +1,76 @@
+.modalWrapper {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    z-index: 101;
+    top: 0;
+    left: 0;
+}
+
+.modal {
+    width: min(100%, 450px);
+    border-radius: 12px;
+    text-align: center;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 15px 25px;
+    margin: 0 10px;
+    position: relative;
+    z-index: 102;
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.modalTop {
+    display: flex;
+    justify-content: end;
+    width: 100%;
+}
+
+.closeButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #b9b9b9;
+    border: 1px solid #b9b9b9;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 13px;
+    background-color: transparent;
+    transition: opacity 0.15s;
+
+    &:hover {
+        opacity: 0.7;
+    }
+}
+
+.cancelButton {
+    width: 80px;
+    box-shadow: 0 0 0 0;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    color: #686868;
+}
+
+.deleteButton {
+    width: 80px;
+    box-shadow: 0 0 0 0;
+    background-color: #ff3333;
+}

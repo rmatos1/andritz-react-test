@@ -1,5 +1,6 @@
 .paginationContainer {
     display: flex;
+    flex-wrap: wrap;
     margin-top: 30px;
     align-items: center;
     justify-content: space-between;
@@ -19,6 +20,7 @@
 .pagination {
     display: flex;
     align-items: center;
+    justify-content: end;
     gap: 15px;
 
     & button {
@@ -44,4 +46,11 @@
 .pageIndicator {
     font-weight: 600;
     color: #646464;
+}
+
+@media (max-width: 360px) {
+    .pagination {
+        width: 100%;
+        justify-content: end; 
+    }
 }

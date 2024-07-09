@@ -1,10 +1,8 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { RootState, useAppDispatch, useAppSelector } from "@/store";
-import { changeWereBooksUpdated, resetUpdateError } from "@/store/books";
 import { IBook } from "@/types";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { DEFAULT_BOOKS_PER_PAGE, START_PAGE } from "@/constants";
+import { useToastHelper } from "@/hooks";
 
 export interface BookListProps {
     books: IBook[];
@@ -26,9 +24,7 @@ interface UseBookListHelperOutputProps {
 export const useBookListHelper = (books: IBook[]): UseBookListHelperOutputProps => {
 
     const navigate = useNavigate();
-
-    const dispatch = useAppDispatch();
-    const { wereBooksUpdated, errorUpdateAction } = useAppSelector((state: RootState) => state.books);
+    const { setSuccessMsg } = useToastHelper();
 
     const [currentPage, setCurrentPage] = useState<number>(START_PAGE);
     const [displayedBooks, setDisplayedBooks] = useState<IBook[]>([]);
@@ -37,14 +33,8 @@ export const useBookListHelper = (books: IBook[]): UseBookListHelperOutputProps 
     const [booksPerPage, setBooksPerPage] = useState<string>(DEFAULT_BOOKS_PER_PAGE);
 
     useEffect(() => {
-
-        if (wereBooksUpdated) {
-            
-            dispatch(changeWereBooksUpdated(false));
-            toast.success("Book deleted!");
-        }
-
-    }, [dispatch, wereBooksUpdated])
+        setSuccessMsg("Book deleted!");
+    }, [setSuccessMsg])
 
     useEffect(() => {
 
@@ -58,16 +48,6 @@ export const useBookListHelper = (books: IBook[]): UseBookListHelperOutputProps 
         }
 
     }, [currentPage, books, booksPerPage]);
-
-    useEffect(() => {
-
-        if (errorUpdateAction) {
-            
-            toast.error(errorUpdateAction);
-            dispatch(resetUpdateError());
-        }
-
-    }, [dispatch, errorUpdateAction])
 
     const handleEditBookOnClick = (id: string) => {
         navigate(`/edit-book/${id}`);

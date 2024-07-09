@@ -1,5 +1,6 @@
 import { useManageBookHelper } from "./manageBookHelper.hook";
 import { NavBar } from "@/components";
+import { Link } from "react-router-dom";
 
 import globalStyles from "@/app.module.scss";
 import styles from "./manageBook.module.scss";
@@ -50,6 +51,10 @@ export const ManageBook = () => {
           <input type="submit" value="Save Book" className={`${globalStyles.button} ${styles.submitButton}`} disabled={isButtonDisabled} data-testid="submit-button" />
 
         </form>
+
+        <div className={styles.linkContainer}>
+          <Link to="/">{isEdit ? "Return" : "Go"} to Book List</Link>
+        </div>
 
       </main>
     </>

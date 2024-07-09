@@ -1,16 +1,12 @@
 import { useEffect } from "react";
 import { SubmitHandler, useForm, UseFormRegister } from "react-hook-form";
 import { IBook, PagePaths } from "@/types";
-import {
-    addBookOptimistic,
-    changeWereBooksUpdated,
-    resetUpdateError,
-    updateBookOptimistic, 
-} from "@/store/books";
+import { addBookOptimistic, updateBookOptimistic } from "@/store/books";
 import { RootState, useAppDispatch, useAppSelector } from "@/store";
 import { v4 } from 'uuid';
 import { toast } from 'react-toastify';
 import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useToastHelper } from "@/hooks";
 
 interface BookFormData {
     title: string;
@@ -29,6 +25,7 @@ export const useManageBookHelper = (): UseManageBookHelperOutputProps => {
     const { id } = useParams<{ id?: string }>();
     const navigate = useNavigate();
     const location = useLocation();
+    const { setSuccessMsg } = useToastHelper();
 
     const {
         register,
@@ -40,7 +37,7 @@ export const useManageBookHelper = (): UseManageBookHelperOutputProps => {
     } = useForm<BookFormData>();
 
     const dispatch = useAppDispatch();
-    const { books, wereBooksUpdated, errorUpdateAction } = useAppSelector((state: RootState) => state.books);
+    const { books } = useAppSelector((state: RootState) => state.books);
 
     useEffect(() => {
 
@@ -51,32 +48,14 @@ export const useManageBookHelper = (): UseManageBookHelperOutputProps => {
     }, [location.pathname, reset])
 
     useEffect(() => {
-       
+        
+        setSuccessMsg(id ? "Book updated!" : "Book added!");
+
         if (id) {
             fillForm();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id]);
-
-    useEffect(() => {
-
-        if (wereBooksUpdated) {
-            
-            dispatch(changeWereBooksUpdated(false));
-            toast.success(id ? "Book updated!" : "Book added!");
-        }
-
-    }, [dispatch, wereBooksUpdated, id])
-
-    useEffect(() => {
-
-        if (errorUpdateAction) {
-            
-            toast.error(errorUpdateAction);
-            dispatch(resetUpdateError());
-        }
-
-    }, [dispatch, errorUpdateAction])
+    }, [id, setSuccessMsg]);
 
     const fillForm = async () => {
 
@@ -101,7 +80,7 @@ export const useManageBookHelper = (): UseManageBookHelperOutputProps => {
             author: data.author,
         };
 
-        const hasBookAlreadyAdded = books.find(item => item.title === book.title && item.author && book.author);
+        const hasBookAlreadyAdded = books.find(item => item.title === book.title && item.author === book.author);
 
         if (!hasBookAlreadyAdded) {
             

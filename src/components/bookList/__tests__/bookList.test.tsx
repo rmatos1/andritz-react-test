@@ -7,6 +7,7 @@ import { BookList } from '../';
 import { BookListProps } from '../bookListHelper.hook';
 import { BooksReducer, BooksState } from '@/store/books';
 import { defaultState, testBooks } from '@/constants';
+import { DEFAULT_BOOKS_PER_PAGE } from '@/constants';
 
 const defaultProps: BookListProps = {
     books: testBooks
@@ -93,5 +94,31 @@ describe('<BookList />', () => {
         await new Promise(resolve => setTimeout(resolve, 0));
 
         expect(wrapper.getByTestId('delete-book-modal')).toBeDefined();
+    });
+
+    it('should display the correct number of books per page when modified', () => {
+        const wrapper = render(setup({
+            componentProps: {
+                books: Array.from({ length: 10 }).map((_, index) => ({
+                    id: String(index),
+                    title: `Book ${index}`,
+                    author: `Author ${index}`
+                }))
+            }
+        }));
+        
+        const selectElement = wrapper.getByTestId('select-books-per-page');
+        
+        fireEvent.change(selectElement, { target: { value: DEFAULT_BOOKS_PER_PAGE } });
+        
+        const displayedBooks = wrapper.getAllByTestId('book-card');
+        expect(displayedBooks.length).toEqual(Number(DEFAULT_BOOKS_PER_PAGE));
+        
+        const newValue = "10";
+
+        fireEvent.change(selectElement, { target: { value: newValue } });
+
+        const updatedDisplayedBooks = wrapper.getAllByTestId('book-card');
+        expect(updatedDisplayedBooks.length).toEqual(Number(newValue));
     });
 });

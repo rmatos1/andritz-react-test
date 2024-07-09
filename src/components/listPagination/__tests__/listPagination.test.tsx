@@ -1,15 +1,17 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, render } from '@testing-library/react';
-import { BOOKS_PER_PAGE } from '@/constants';
+import { DEFAULT_BOOKS_PER_PAGE } from '@/constants';
 import { ListPagination, ListPaginationProps } from '../';
 
 const defaultProps: ListPaginationProps = {
     booksLength: 10,
     currentPage: 1,
-    onPagination: () => {}
+    onPagination: vi.fn(),
+    booksPerPage: DEFAULT_BOOKS_PER_PAGE,
+    onSelectBooksPerPage: vi.fn()
 };
   
-const LAST_PAGE = Math.ceil(defaultProps.booksLength / BOOKS_PER_PAGE);
+const LAST_PAGE = Math.ceil(defaultProps.booksLength / Number(DEFAULT_BOOKS_PER_PAGE));
 
 const setup = (componentProps?: Partial<ListPaginationProps>): JSX.Element => {
     const baseProps = { ...defaultProps, ...componentProps };
@@ -61,6 +63,33 @@ describe('<ListPagination />', () => {
         const pageIndicator = wrapper.getByTestId('page-indicator');
 
         expect(pageIndicator.textContent).toMatch(`${defaultProps.currentPage} / ${LAST_PAGE}`);
-    })
+    });
+
+    it("should display correctly the selected number of books per page", () => {
+
+        const wrapper = render(setup());
+
+        const selectBooksPerPage = wrapper.getByTestId('select-books-per-page') as HTMLSelectElement;
+
+        expect(selectBooksPerPage.value).toEqual(DEFAULT_BOOKS_PER_PAGE);
+    });
+
+    it('should call onSelectBooksPerPage on select', async () => {
+        let booksPerPage = DEFAULT_BOOKS_PER_PAGE;
+
+        const onSelectBooksPerPageMock = (e: React.ChangeEvent<HTMLSelectElement>) => {
+            booksPerPage = e.target.value;
+        };
+
+        const wrapper = render(setup({ onSelectBooksPerPage: onSelectBooksPerPageMock }));
+
+        const updatedBooksPerPage = "10";
+
+        const selectBooksPerPage = wrapper.getByTestId('select-books-per-page') as HTMLSelectElement;
+
+        fireEvent.change(selectBooksPerPage, { target: { value: updatedBooksPerPage } });
+
+        expect(booksPerPage).toEqual(updatedBooksPerPage);
+    });
 });
   

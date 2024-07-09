@@ -1,8 +1,24 @@
-.pagination {
+.paginationContainer {
     display: flex;
     margin-top: 30px;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.booksPerPageContainer {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.selectBooksPerPage {
+    width: 60px;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
     gap: 15px;
 
     & button {

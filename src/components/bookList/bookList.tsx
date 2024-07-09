@@ -11,14 +11,15 @@ export const BookList: React.FC<BookListProps> = ({ books }) => {
   
   const {
     onEditBook,
-    onDeleteBook,
     displayedBooks,
     currentPage,
     onClickPagination,
     selectedBook,
     isModalVisible,
     onOpenModal,
-    onCloseModal
+    onCloseModal,
+    booksPerPage,
+    onSelectBooksPerPage
   } = useBookListHelper(books);
 
   return (
@@ -26,9 +27,8 @@ export const BookList: React.FC<BookListProps> = ({ books }) => {
       {
         isModalVisible && (
           <DeleteBookModal
-            bookTitle={selectedBook?.title || ""}
+            book={selectedBook}
             onCloseModal={onCloseModal}
-            onDeleteBook={onDeleteBook}
           />
         )
       }
@@ -64,6 +64,8 @@ export const BookList: React.FC<BookListProps> = ({ books }) => {
                     booksLength={books.length}
                     currentPage={currentPage}
                     onPagination={onClickPagination}
+                    booksPerPage={booksPerPage}
+                    onSelectBooksPerPage={onSelectBooksPerPage}
                   />
                 </>
               ) : (

@@ -17,6 +17,6 @@ export const routes: RouteObject[] = [
   },
   {
     path: PagePaths.notFound,
-    element: <PageNotFound />
-  }
+    element: <PageNotFound />,
+  },
 ];

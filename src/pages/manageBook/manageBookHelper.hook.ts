@@ -3,105 +3,96 @@ import { SubmitHandler, useForm, UseFormRegister } from "react-hook-form";
 import { IBook, PagePaths } from "@/types";
 import { addBookOptimistic, updateBookOptimistic } from "@/store/books";
 import { RootState, useAppDispatch, useAppSelector } from "@/store";
-import { v4 } from 'uuid';
-import { toast } from 'react-toastify';
+import { v4 } from "uuid";
+import { toast } from "react-toastify";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useToastHelper } from "@/hooks";
 
 interface BookFormData {
-    title: string;
-    author: string;
+  title: string;
+  author: string;
 }
 
 interface UseManageBookHelperOutputProps {
-    register: UseFormRegister<BookFormData>;
-    onSubmit: () => void;
-    isButtonDisabled: boolean;
-    isEdit: boolean;
+  register: UseFormRegister<BookFormData>;
+  onSubmit: () => void;
+  isButtonDisabled: boolean;
+  isEdit: boolean;
 }
 
 export const useManageBookHelper = (): UseManageBookHelperOutputProps => {
+  const { id } = useParams<{ id?: string }>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { setSuccessMsg } = useToastHelper();
 
-    const { id } = useParams<{ id?: string }>();
-    const navigate = useNavigate();
-    const location = useLocation();
-    const { setSuccessMsg } = useToastHelper();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    trigger,
+    formState: { isValid },
+  } = useForm<BookFormData>();
 
-    const {
-        register,
-        handleSubmit,
-        reset,
-        setValue,
-        trigger,
-        formState: { isValid }
-    } = useForm<BookFormData>();
+  const dispatch = useAppDispatch();
+  const { books } = useAppSelector((state: RootState) => state.books);
 
-    const dispatch = useAppDispatch();
-    const { books } = useAppSelector((state: RootState) => state.books);
-
-    useEffect(() => {
-
-        if (location.pathname === PagePaths.addBook) {
-            reset();
-        }
-
-    }, [location.pathname, reset])
-
-    useEffect(() => {
-        
-        setSuccessMsg(id ? "Book updated!" : "Book added!");
-
-        if (id) {
-            fillForm();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id, setSuccessMsg]);
-
-    const fillForm = async () => {
-
-        const book = books.find(book => book.id === id);
-
-        if (book) {
-            
-            setValue("title", book.title);
-            setValue("author", book.author);
-            await trigger();
-
-        } else {
-            navigate(PagePaths.addBook)
-        }
+  useEffect(() => {
+    if (location.pathname === PagePaths.addBook) {
+      reset();
     }
+  }, [location.pathname, reset]);
 
-    const handleFormOnSubmit: SubmitHandler<BookFormData> = async (data) => {
-        
-        const book: IBook = {
-            id: id || v4(),
-            title: data.title,
-            author: data.author,
-        };
+  useEffect(() => {
+    setSuccessMsg(id ? "Book updated!" : "Book added!");
 
-        const hasBookAlreadyAdded = books.find(item => item.title === book.title && item.author === book.author);
+    if (id) {
+      fillForm();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, setSuccessMsg]);
 
-        if (!hasBookAlreadyAdded) {
-            
-            if (id) {
-                await dispatch(updateBookOptimistic(book));
-            } else {
-    
-                await dispatch(addBookOptimistic(book));
-        
-                reset();
-            }
+  const fillForm = async () => {
+    const book = books.find((book) => book.id === id);
 
-        } else {
-            toast.error("Book is already on the list");
-        }
+    if (book) {
+      setValue("title", book.title);
+      setValue("author", book.author);
+      await trigger();
+    } else {
+      navigate(PagePaths.addBook);
+    }
+  };
+
+  const handleFormOnSubmit: SubmitHandler<BookFormData> = async (data) => {
+    const book: IBook = {
+      id: id || v4(),
+      title: data.title,
+      author: data.author,
     };
 
-    return {
-        register,
-        onSubmit: handleSubmit(handleFormOnSubmit),
-        isButtonDisabled: !isValid,
-        isEdit: !!id
+    const hasBookAlreadyAdded = books.find(
+      (item) => item.title === book.title && item.author === book.author
+    );
+
+    if (!hasBookAlreadyAdded) {
+      if (id) {
+        await dispatch(updateBookOptimistic(book));
+      } else {
+        await dispatch(addBookOptimistic(book));
+
+        reset();
+      }
+    } else {
+      toast.error("Book is already on the list");
     }
-}
+  };
+
+  return {
+    register,
+    onSubmit: handleSubmit(handleFormOnSubmit),
+    isButtonDisabled: !isValid,
+    isEdit: !!id,
+  };
+};

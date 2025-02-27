@@ -129,12 +129,6 @@ You also have the flexibility to adjust tests as necessary to match your impleme
 - The application should handle errors gracefully and provide user feedback.
 - Optional features are also encouraged for extra credits such as theme switching or internationalization.
 
-## Submission
-
-Submit your completed project via a GitHub repository link.
-We strongly encourage pushing to a private and adding the recruiter as collaborator. \
-Refer to: [Inviting collaborators to a personal repository](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-access-to-your-personal-repositories/inviting-collaborators-to-a-personal-repository)
-
 ## Notes
 
 - You can use any libraries or tools as long as the core requirements are met.

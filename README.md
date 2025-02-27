@@ -10,7 +10,7 @@ The application will interact with a mock API provided by `json-server`.
 
 All functionalities must be implemented according to the provided acceptance criteria, and all tests must pass.
 
-[Online version](https://andritz-react-test-git-master-roberiomatos-projects.vercel.app/)
+[Online demo](https://andritz-react-test-git-master-roberiomatos-projects.vercel.app/)
 
 ## Getting Started
 

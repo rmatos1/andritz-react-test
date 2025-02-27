@@ -4,6 +4,7 @@ import { ChevronIcon } from "@/icons";
 import globalStyles from "@/app.module.scss";
 import styles from "./listPagination.module.scss";
 import { ChangeEvent } from "react";
+import { BOOKS_PER_PAGE_OPTIONS } from "@/constants";
 
 export interface ListPaginationProps {
   booksLength: number;
@@ -24,7 +25,6 @@ export const ListPagination: React.FC<ListPaginationProps> = ({
 
   const ACTIVE_FILL = "#fff";
   const DISABLED_FILL = "#868686";
-  const BOOKS_PER_PAGE_OPTIONS = [5, 10, 20];
 
   const advanceToNextPageOnClick = () => {
     onPagination(currentPage + 1);

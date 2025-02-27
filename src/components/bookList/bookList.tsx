@@ -33,7 +33,7 @@ export const BookList: React.FC<BookListProps> = ({ books, totalBooks }) => {
             {books.length ? (
               <>
                 <p className={globalStyles.text} style={{ margin: 0 }}>
-                  Displaying {books.length} of {totalBooks} books
+                  Current book list length: {books.length} of {totalBooks} books
                 </p>
 
                 {displayedBooks.map((book: IBook) => (

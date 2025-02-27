@@ -34,7 +34,7 @@ interface ISetup {
   path?: string;
 }
 
-const setup = ({ customState, path = "/" }: ISetup): JSX.Element => {
+const setup = ({ customState, path = "/" }: ISetup = {}): JSX.Element => {
   const store: EnhancedStore<unknown, UnknownAction> = configureStore({
     reducer: {
       books: BooksReducer.reducer,
@@ -52,7 +52,7 @@ const setup = ({ customState, path = "/" }: ISetup): JSX.Element => {
     <Provider store={store}>
       <MemoryRouter initialEntries={[path]}>
         <Routes>
-          <Route path="/:id" element={<ManageBook />} />
+          <Route path="/:bookId" element={<ManageBook />} />
           <Route path="/" element={<ManageBook />} />
         </Routes>
       </MemoryRouter>
@@ -62,7 +62,7 @@ const setup = ({ customState, path = "/" }: ISetup): JSX.Element => {
 
 describe("<ManageBook />", () => {
   it("should render the specified title and author", () => {
-    const wrapper = render(setup({}));
+    const wrapper = render(setup());
 
     const titleInput = wrapper.getByTestId("title-input") as HTMLInputElement;
     fireEvent.change(titleInput, { target: { value: testBooks[0].title } });
@@ -75,7 +75,7 @@ describe("<ManageBook />", () => {
     expect(authorInput.value).toEqual(testBooks[0].author);
   });
 
-  it("should render the saved title and author accordingly with id", async () => {
+  it("should render the saved title and author accordingly with book id", async () => {
     const wrapper = render(setup({ path: "/1" }));
 
     await waitFor(() => {
@@ -93,7 +93,7 @@ describe("<ManageBook />", () => {
     const title = "Book 3";
     const author = "Author 3";
 
-    const wrapper = render(setup({}));
+    const wrapper = render(setup());
 
     const titleInput = wrapper.getByTestId("title-input") as HTMLInputElement;
     const authorInput = wrapper.getByTestId("author-input") as HTMLInputElement;
@@ -143,7 +143,7 @@ describe("<ManageBook />", () => {
   it("should show a toast whenever adding a duplicate book", async () => {
     const wrapper = render(
       <>
-        {setup({})}
+        {setup()}
         <ToastContainer theme="dark" autoClose={3000} />
       </>
     );

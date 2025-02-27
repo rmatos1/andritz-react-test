@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState, useMemo } from "react";
+import { ChangeEvent, useEffect, useState, useMemo, useCallback } from "react";
 import { IBook } from "@/types";
 import { useNavigate } from "react-router-dom";
 import { DEFAULT_BOOKS_PER_PAGE, START_PAGE } from "@/constants";
@@ -6,6 +6,7 @@ import { useToastHelper } from "@/hooks";
 
 export interface BookListProps {
   books: IBook[];
+  totalBooks?: number;
 }
 
 interface UseBookListHelperOutputProps {
@@ -25,7 +26,7 @@ export const useBookListHelper = (
   books: IBook[]
 ): UseBookListHelperOutputProps => {
   const navigate = useNavigate();
-  const { setSuccessMsg } = useToastHelper();
+  const { setToastSuccessMsg } = useToastHelper();
 
   const [currentPage, setCurrentPage] = useState<number>(START_PAGE);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -50,11 +51,11 @@ export const useBookListHelper = (
   }, [currentPage, books, booksPerPage]);
 
   useEffect(() => {
-    setSuccessMsg("Book deleted!");
-  }, [setSuccessMsg]);
+    setToastSuccessMsg("Book deleted!");
+  }, [setToastSuccessMsg]);
 
-  const handleEditBookOnClick = (id: string) => {
-    navigate(`/edit-book/${id}`);
+  const handleEditBookOnClick = (bookId: string) => {
+    navigate(`/edit-book/${bookId}`);
   };
 
   const handleModalOnOpen = (book: IBook) => {
@@ -66,13 +67,16 @@ export const useBookListHelper = (
     setIsModalVisible(false);
   };
 
-  const handlePaginationOnClick = (page: number) => {
+  const handlePaginationOnClick = useCallback((page: number) => {
     setCurrentPage(page);
-  };
+  }, []);
 
-  const handleBooksPerPageOnSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-    setBooksPerPage(e.target.value);
-  };
+  const handleBooksPerPageOnSelect = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      setBooksPerPage(e.target.value);
+    },
+    []
+  );
 
   return {
     onEditBook: handleEditBookOnClick,

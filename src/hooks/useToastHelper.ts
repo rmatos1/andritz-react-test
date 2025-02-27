@@ -4,7 +4,7 @@ import { changeWereBooksUpdated, resetUpdateError } from "@/store/books";
 import { toast } from "react-toastify";
 
 interface UseToastHelperOutputProps {
-  setSuccessMsg: Dispatch<SetStateAction<string>>;
+  setToastSuccessMsg: Dispatch<SetStateAction<string>>;
 }
 
 export const useToastHelper = (): UseToastHelperOutputProps => {
@@ -13,14 +13,14 @@ export const useToastHelper = (): UseToastHelperOutputProps => {
     (state: RootState) => state.books
   );
 
-  const [successMsg, setSuccessMsg] = useState<string>("");
+  const [toastSuccessMsg, setToastSuccessMsg] = useState<string>("");
 
   useEffect(() => {
     if (wereBooksUpdated) {
       dispatch(changeWereBooksUpdated(false));
-      toast.success(successMsg);
+      toast.success(toastSuccessMsg);
     }
-  }, [dispatch, wereBooksUpdated, successMsg]);
+  }, [dispatch, wereBooksUpdated, toastSuccessMsg]);
 
   useEffect(() => {
     if (errorUpdateAction) {
@@ -30,6 +30,6 @@ export const useToastHelper = (): UseToastHelperOutputProps => {
   }, [dispatch, errorUpdateAction]);
 
   return {
-    setSuccessMsg,
+    setToastSuccessMsg,
   };
 };

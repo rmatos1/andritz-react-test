@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { SubmitHandler, useForm, UseFormRegister } from "react-hook-form";
 import { IBook, PagePaths } from "@/types";
 import { addBookOptimistic, updateBookOptimistic } from "@/store/books";
@@ -21,10 +21,11 @@ interface UseManageBookHelperOutputProps {
 }
 
 export const useManageBookHelper = (): UseManageBookHelperOutputProps => {
-  const { id } = useParams<{ id?: string }>();
+  const { bookId } = useParams<{ bookId?: string }>();
+
   const navigate = useNavigate();
   const location = useLocation();
-  const { setSuccessMsg } = useToastHelper();
+  const { setToastSuccessMsg } = useToastHelper();
 
   const {
     register,
@@ -38,23 +39,8 @@ export const useManageBookHelper = (): UseManageBookHelperOutputProps => {
   const dispatch = useAppDispatch();
   const { books } = useAppSelector((state: RootState) => state.books);
 
-  useEffect(() => {
-    if (location.pathname === PagePaths.addBook) {
-      reset();
-    }
-  }, [location.pathname, reset]);
-
-  useEffect(() => {
-    setSuccessMsg(id ? "Book updated!" : "Book added!");
-
-    if (id) {
-      fillForm();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, setSuccessMsg]);
-
-  const fillForm = async () => {
-    const book = books.find((book) => book.id === id);
+  const fillEditBook = useCallback(async () => {
+    const book = books.find((book) => book.id === bookId);
 
     if (book) {
       setValue("title", book.title);
@@ -63,11 +49,25 @@ export const useManageBookHelper = (): UseManageBookHelperOutputProps => {
     } else {
       navigate(PagePaths.addBook);
     }
-  };
+  }, [bookId, books, navigate, setValue, trigger]);
+
+  useEffect(() => {
+    if (location.pathname === PagePaths.addBook) {
+      reset();
+    }
+  }, [location.pathname, reset]);
+
+  useEffect(() => {
+    setToastSuccessMsg(bookId ? "Book updated!" : "Book added!");
+
+    if (bookId) {
+      fillEditBook();
+    }
+  }, [bookId, setToastSuccessMsg, fillEditBook]);
 
   const handleFormOnSubmit: SubmitHandler<BookFormData> = async (data) => {
     const book: IBook = {
-      id: id || v4(),
+      id: bookId || v4(),
       title: data.title,
       author: data.author,
     };
@@ -77,7 +77,7 @@ export const useManageBookHelper = (): UseManageBookHelperOutputProps => {
     );
 
     if (!hasBookAlreadyAdded) {
-      if (id) {
+      if (bookId) {
         await dispatch(updateBookOptimistic(book));
       } else {
         await dispatch(addBookOptimistic(book));
@@ -93,6 +93,6 @@ export const useManageBookHelper = (): UseManageBookHelperOutputProps => {
     register,
     onSubmit: handleSubmit(handleFormOnSubmit),
     isButtonDisabled: !isValid,
-    isEdit: !!id,
+    isEdit: !!bookId,
   };
 };

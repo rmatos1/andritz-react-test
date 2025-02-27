@@ -11,6 +11,7 @@ interface UseHomeHelperOutputProps {
   onChangeValue: (e: ChangeEvent<HTMLInputElement>) => void;
   error: string | null;
   getBooks: () => void;
+  totalBooks: number;
 }
 
 export const useHomeHelper = (): UseHomeHelperOutputProps => {
@@ -65,5 +66,6 @@ export const useHomeHelper = (): UseHomeHelperOutputProps => {
     onChangeValue: handleSearchValueOnChange,
     error: errorFetchBooks,
     getBooks,
+    totalBooks: books.length,
   };
 };

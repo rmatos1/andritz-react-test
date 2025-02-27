@@ -3,8 +3,9 @@ import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { EnhancedStore, UnknownAction, configureStore } from "@reduxjs/toolkit";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { Home } from "..";
+import { ManageBook } from "@/pages/manageBook";
 import { BooksReducer, BooksState } from "@/store/books";
 import { defaultState, testBooks } from "@/constants";
 
@@ -36,7 +37,10 @@ const setup = (customState?: Partial<BooksState>): JSX.Element => {
   return (
     <Provider store={store}>
       <MemoryRouter>
-        <Home />
+        <Routes>
+          <Route path="/add-book" element={<ManageBook />} />
+          <Route path="/" element={<Home />} />
+        </Routes>
       </MemoryRouter>
     </Provider>
   );
@@ -49,6 +53,17 @@ describe("<Home />", () => {
     const loadingIndicators = wrapper.getAllByTestId("loading-indicator");
 
     expect(loadingIndicators.length).toBeGreaterThan(0);
+  });
+
+  it("should navigate to the add book page when the 'Add Book' button is clicked", () => {
+    const wrapper = render(setup());
+
+    const addBookButton = wrapper.getByTestId("add-book-button");
+    fireEvent.click(addBookButton);
+
+    const addBookTitle = wrapper.getByText("Add Book");
+
+    expect(addBookTitle).toBeInTheDocument();
   });
 
   it("should render correctly the number of books", async () => {
@@ -101,5 +116,13 @@ describe("<Home />", () => {
     const errorFetchBooks = await wrapper.findByTestId("error-fetch-books");
 
     expect(errorFetchBooks.textContent).toMatch(error);
+  });
+
+  it("should display empty book list message when there are no books in the list", () => {
+    const wrapper = render(setup({ books: [] }));
+
+    const emptyBookList = wrapper.getByTestId("empty-book-list");
+
+    expect(emptyBookList).toBeDefined();
   });
 });

@@ -1,5 +1,6 @@
+import { Link } from "react-router-dom";
 import { useHomeHelper } from "./homeHelper.hook";
-import { BookList, NavBar } from "@/components";
+import { BookList } from "@/components";
 
 import globalStyles from "@/app.module.scss";
 import styles from "./home.module.scss";
@@ -13,14 +14,24 @@ export const Home = () => {
     onChangeValue,
     error,
     getBooks,
+    totalBooks,
   } = useHomeHelper();
 
   return (
     <>
-      <NavBar />
-
       <main className={globalStyles.wrapper}>
-        <h1 className={globalStyles.title}>Book List</h1>
+        <div className={styles.titleContainer}>
+          <h1 className={globalStyles.title}>Book List</h1>
+
+          <Link to="/add-book">
+            <button
+              className={`${globalStyles.button} ${styles.getBooksButton}`}
+              data-testid="add-book-button"
+            >
+              Add Book
+            </button>
+          </Link>
+        </div>
 
         {error ? (
           <>
@@ -63,7 +74,18 @@ export const Home = () => {
                 ))}
               </>
             ) : (
-              <BookList books={displayedBooks} />
+              <>
+                {totalBooks > 0 ? (
+                  <BookList books={displayedBooks} totalBooks={totalBooks} />
+                ) : (
+                  <p
+                    className={globalStyles.text}
+                    data-testid="empty-book-list"
+                  >
+                    Your book list is empty. Click on the button to add a book.
+                  </p>
+                )}
+              </>
             )}
           </>
         )}

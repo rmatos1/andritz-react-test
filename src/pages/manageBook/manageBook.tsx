@@ -1,5 +1,4 @@
 import { useManageBookHelper } from "./manageBookHelper.hook";
-import { NavBar } from "@/components";
 import { Link } from "react-router-dom";
 
 import globalStyles from "@/app.module.scss";
@@ -10,50 +9,46 @@ export const ManageBook = () => {
     useManageBookHelper();
 
   return (
-    <>
-      <NavBar />
+    <main className={globalStyles.wrapper}>
+      <h1 className={globalStyles.title}>{isEdit ? "Edit" : "Add"} Book</h1>
 
-      <main className={globalStyles.wrapper}>
-        <h1 className={globalStyles.title}>{isEdit ? "Edit" : "Add"} Book</h1>
-
-        <form onSubmit={onSubmit} className={styles.form}>
-          <div className={styles.inputGroup}>
-            <label htmlFor="title" className={styles.label}>
-              Title
-            </label>
-
-            <input
-              data-testid="title-input"
-              className={globalStyles.formInput}
-              {...register("title", { required: true, minLength: 3 })}
-            />
-          </div>
-
-          <div className={styles.inputGroup}>
-            <label htmlFor="author" className={styles.label}>
-              Author
-            </label>
-
-            <input
-              data-testid="author-input"
-              className={globalStyles.formInput}
-              {...register("author", { required: true, minLength: 3 })}
-            />
-          </div>
+      <form onSubmit={onSubmit} className={styles.form}>
+        <div className={styles.inputGroup}>
+          <label htmlFor="title" className={styles.label}>
+            Title
+          </label>
 
           <input
-            type="submit"
-            value="Save Book"
-            className={`${globalStyles.button} ${styles.submitButton}`}
-            disabled={isButtonDisabled}
-            data-testid="submit-button"
+            data-testid="title-input"
+            className={globalStyles.formInput}
+            {...register("title", { required: true, minLength: 3 })}
           />
-        </form>
-
-        <div className={styles.linkContainer}>
-          <Link to="/">{isEdit ? "Return" : "Go"} to Book List</Link>
         </div>
-      </main>
-    </>
+
+        <div className={styles.inputGroup}>
+          <label htmlFor="author" className={styles.label}>
+            Author
+          </label>
+
+          <input
+            data-testid="author-input"
+            className={globalStyles.formInput}
+            {...register("author", { required: true, minLength: 3 })}
+          />
+        </div>
+
+        <input
+          type="submit"
+          value="Save Book"
+          className={`${globalStyles.button} ${styles.submitButton}`}
+          disabled={isButtonDisabled}
+          data-testid="submit-button"
+        />
+      </form>
+
+      <div className={styles.linkContainer}>
+        <Link to="/">Return to Book List</Link>
+      </div>
+    </main>
   );
 };

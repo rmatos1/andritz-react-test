@@ -7,7 +7,7 @@ import { DeleteBookModal } from "@/modals";
 import globalStyles from "@/app.module.scss";
 import styles from "./bookList.module.scss";
 
-export const BookList: React.FC<BookListProps> = ({ books }) => {
+export const BookList: React.FC<BookListProps> = ({ books, totalBooks }) => {
   const {
     onEditBook,
     displayedBooks,
@@ -33,7 +33,7 @@ export const BookList: React.FC<BookListProps> = ({ books }) => {
             {books.length ? (
               <>
                 <p className={globalStyles.text} style={{ margin: 0 }}>
-                  Total displayed books: {books.length}
+                  Displaying {books.length} of {totalBooks} books
                 </p>
 
                 {displayedBooks.map((book: IBook) => (

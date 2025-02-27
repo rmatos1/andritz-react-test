@@ -32,6 +32,10 @@ export const BookList: React.FC<BookListProps> = ({ books }) => {
           <>
             {books.length ? (
               <>
+                <p className={globalStyles.text} style={{ margin: 0 }}>
+                  Total displayed books: {books.length}
+                </p>
+
                 {displayedBooks.map((book: IBook) => (
                   <div
                     key={book.id}

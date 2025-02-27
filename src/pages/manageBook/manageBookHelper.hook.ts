@@ -40,7 +40,7 @@ export const useManageBookHelper = (): UseManageBookHelperOutputProps => {
   const { books } = useAppSelector((state: RootState) => state.books);
 
   const fillEditBook = useCallback(async () => {
-    const book = books.find((book) => book.id === bookId);
+    const book = books?.find((book) => book.id === bookId);
 
     if (book) {
       setValue("title", book.title);
@@ -52,18 +52,14 @@ export const useManageBookHelper = (): UseManageBookHelperOutputProps => {
   }, [bookId, books, navigate, setValue, trigger]);
 
   useEffect(() => {
-    if (location.pathname === PagePaths.addBook) {
-      reset();
-    }
-  }, [location.pathname, reset]);
-
-  useEffect(() => {
     setToastSuccessMsg(bookId ? "Book updated!" : "Book added!");
 
-    if (bookId) {
+    if (location.pathname === PagePaths.addBook) {
+      reset();
+    } else {
       fillEditBook();
     }
-  }, [bookId, setToastSuccessMsg, fillEditBook]);
+  }, [bookId, location.pathname, reset, fillEditBook, setToastSuccessMsg]);
 
   const handleFormOnSubmit: SubmitHandler<BookFormData> = async (data) => {
     const book: IBook = {

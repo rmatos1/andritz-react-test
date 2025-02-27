@@ -3,7 +3,8 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { App } from "./App.tsx";
 import { Provider } from "react-redux";
-import { store } from "@/store";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "@/store";
 import { ToastContainer } from "react-toastify";
 import { ErrorBoundary } from "./pages";
 
@@ -15,9 +16,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <ErrorBoundary>
       <BrowserRouter>
         <Provider store={store}>
-          <ToastContainer theme="dark" autoClose={3000} />
-
-          <App />
+          <PersistGate loading={null} persistor={persistor}>
+            <ToastContainer theme="dark" autoClose={3000} />
+            <App />
+          </PersistGate>
         </Provider>
       </BrowserRouter>
     </ErrorBoundary>
